@@ -9,27 +9,43 @@ document.addEventListener('DOMContentLoaded', () => {
         map.style.transform = `translate(${mapX}px, ${mapY}px)`;
     };
 
+    let room1_Coordinates = [250, 250, -250, -250];
+    let playerPosition = [0, 0];
+    
     window.addEventListener('keydown', (event) => {
         const step = 10;
         switch (event.key) {
             case 'ArrowUp':
             case 'w':
-                moveMap(0, step);
+                if (playerPosition[1] - step >= room1_Coordinates[3]) {
+                    moveMap(0, step);
+                    playerPosition[1] -= step; // Zmniejszamy pozycję gracza o wartość kroku (w górę)
+                }
                 break;
             case 'ArrowDown':
             case 's':
-                moveMap(0, -step);
+                if (playerPosition[1] + step <= room1_Coordinates[1]) {
+                    moveMap(0, -step);
+                    playerPosition[1] += step; // Zwiększamy pozycję gracza o wartość kroku (w dół)
+                }
                 break;
             case 'ArrowLeft':
             case 'a':
-                moveMap(step, 0);
+                if (playerPosition[0] + step <= room1_Coordinates[0]) {
+                    moveMap(step, 0);
+                    playerPosition[0] += step; // Zwiększamy pozycję gracza o wartość kroku (w lewo)
+                }
                 break;
             case 'ArrowRight':
             case 'd':
-                moveMap(-step, 0);
+                if (playerPosition[0] - step >= room1_Coordinates[2]) {
+                    moveMap(-step, 0);
+                    playerPosition[0] -= step; // Zmniejszamy pozycję gracza o wartość kroku (w prawo)
+                }
                 break;
         }
     });
+    
 
     // Define positions of objects
     const setElementPosition = (id, x, y) => {
@@ -42,15 +58,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Ensure the DOM is fully loaded
+    // Create and set positions for objects when DOM is fully loaded
     window.onload = () => {
-        // Set positions for table, chairs, and papers
+        // Create table element
+        map.innerHTML += "<div id='table' class='table'></div>";
+        // Set position for table
         setElementPosition('table', 200, 0);
 
-        setElementPosition('chair1', 200, 100);
+        // Create chair elements and set positions
+        for (let i = 1; i <= 1; i++) {
+            map.innerHTML += `<div id='chair${i}' class='chair'></div>`;
+            setElementPosition(`chair${i}`, 200, 100);
+        }
 
-
-        setElementPosition('paper1', 250, 25);
-        setElementPosition('paper2', 235, 45);
+        // Create paper elements and set positions
+        for (let i = 1; i <= 2; i++) {
+            map.innerHTML += `<div id='paper${i}' class='paper'></div>`;
+            setElementPosition(`paper${i}`, 225 + 15 * i, 25 + 20 * i);
+        }
     };
 });
